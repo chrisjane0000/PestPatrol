@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pest Patrol - Home</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+    }
+
+    body {
+      background-image: url('./images/pest patrol wireframe (1).jpg');
+      background-size: cover;
+      color: white;
+    }
+
+    header {
+      background-color: #8ed14b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      position: relative;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: black;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #4a9c0f;
+    }
+
+    .profile-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ccc url('https://img.icons8.com/ios-filled/50/user.png') center center no-repeat;
+      background-size: 60%;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 30px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      min-width: 120px;
+      z-index: 100;
+    }
+
+    .dropdown a {
+      color: black;
+      padding: 10px;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .hero {
+      height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+    }
+
+    .hero .learn-btn {
+      background: linear-gradient(to right, #4CAF50, #8ed14b);
+      border: none;
+      border-radius: 30px;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .hero .learn-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="./images/logo.png" alt="Pest Patrol Logo" />
+    </div>
+    <nav>
+      <a href="#">HOME</a>
+      <a href="#">ABOUT</a>
+      <a href="#">FEATURE</a>
+      <a href="#">DETECTED PEST</a>
+    </nav>
+    <div class="profile-container" onclick="toggleDropdown()">
+      <div class="profile-icon"></div>
+      <div class="dropdown" id="profileDropdown">
+        <a href="./profile.html">Profile</a>
+        <a href="./index.html">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>"Smart. Sustainable. Automated Pest Control."</h1>
+    <button class="learn-btn">Learn More</button>
+  </section>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Optional: Hide dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      const container = document.querySelector('.profile-container');
+      if (!container.contains(e.target)) {
+        document.getElementById('profileDropdown').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

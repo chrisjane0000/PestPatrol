@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pest Patrol Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-image: url('./images/pest patrol wireframe (1).jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background-color: #8ed14b;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    .header h1 {
+      font-size: 2em;
+      color: #000;
+    }
+
+    .login-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-form {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 300px;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      padding: 15px;
+      border: none;
+      border-radius: 25px;
+      background-color: #8ed14b;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .login-form input::placeholder {
+      color: #000;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9em;
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .forgot-password {
+      color: white;
+      text-decoration: none;
+    }
+
+    button[type="submit"] {
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      background-color: #4a9c0f;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3b7c0c;
+    }
+
+    .signup-text {
+      text-align: center;
+      font-size: 0.95em;
+    }
+
+    .signup-link {
+      color: #8ed14b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="./images/logo.png" alt="Pest Patrol Logo" class="logo" />
+    <h1>Pest Patrol</h1>
+  </div>
+
+  <div class="login-container">
+    <form class="login-form" onsubmit="redirectToHome(event)">
+      <input type="text" placeholder="Enter your Email/Number" required />
+      <input type="password" placeholder="Enter your password" required />
+
+      <div class="options">
+        <label><input type="checkbox" /> Remember me</label>
+        <a href="#" class="forgot-password">Forgot Password</a>
+      </div>
+
+      <button type="submit">Login</button>
+
+      <p class="signup-text">
+        Don’t have an account?
+        <a href="./signup.html" class="signup-link">Sign up</a>
+      </p>
+    </form>
+  </div>
+
+  <script>
+    function redirectToHome(event) {
+      event.preventDefault(); // Prevent default form submission
+      // Redirect to home.html
+      window.location.href = "./home.html";
+    }
+  </script>
+</body>
+</html>

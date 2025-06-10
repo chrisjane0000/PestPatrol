@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enter OTP - Pest Patrol</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: url('./images/pest patrol wireframe (1).jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: white;
+    }
+
+    .header {
+      background-color: #8ed14b;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    .header h1 {
+      font-size: 2em;
+      color: #000;
+    }
+
+    .otp-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .otp-box {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .otp-box h2 {
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .otp-inputs input {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 1.5em;
+      border-radius: 10px;
+      border: none;
+      background-color: #8ed14b;
+      color: #000;
+    }
+
+    .otp-box button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background-color: #4a9c0f;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .otp-box button:hover {
+      background-color: #3b7c0c;
+    }
+
+    .resend-text {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
+    .resend-text a {
+      color: #8ed14b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="./images/logo.png" alt="Pest Patrol Logo" class="logo" />
+    <h1>Pest Patrol</h1>
+  </div>
+
+  <div class="otp-container">
+    <div class="otp-box">
+      <h2>Enter OTP</h2>
+      <p>Please enter the 6-digit code sent to your email/number</p>
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+      </div>
+      <button onclick="verifyOTP()">Verify</button>
+      <p class="resend-text">
+        Didn't receive code? <a href="#">Resend</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const inputs = document.querySelectorAll('.otp-inputs input');
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    function verifyOTP() {
+      const otp = Array.from(inputs).map(input => input.value).join('');
+      if (otp.length === 6) {
+        alert("OTP Verified: " + otp);
+        // Replace below with real redirect after server-side verification
+        window.location.href = './index.html';
+      } else {
+        alert("Please enter all 6 digits of the OTP.");
+      }
+    }
+  </script>
+</body>
+</html>
