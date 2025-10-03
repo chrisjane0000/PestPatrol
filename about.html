@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pest Patrol - Home</title>
+  <title>Pest Patrol - About</title>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     * {
       margin: 0;
@@ -12,30 +16,19 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    body, html {
-      height: 100%;
-    }
-
     body {
-      background-image: url('./images/pest patrol wireframe (1).jpg');
-      background-size: cover;
-      background-attachment: fixed;
-      color: white;
+      background-color: #d7eac6; /* Pale green background */
+      color: black;
     }
 
+    /* Navbar */
     header {
-      background-color: #8ed14b;
+      background-color: #8ed14b; /* Dark green navbar */
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 15px 30px;
       position: relative;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
 
     .logo img {
@@ -75,7 +68,7 @@
     .dropdown {
       position: absolute;
       top: 60px;
-      right: 30px;
+      right: 0;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -101,63 +94,77 @@
       background-color: #f0f0f0;
     }
 
-    .hero {
-      height: calc(100vh - 80px);
+    /* About Section */
+    .about-section {
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+    }
+
+    .about-section h2 {
+      margin-bottom: 15px;
+      font-size: 2em;
+    }
+
+    .about-section p {
+      font-size: 25px;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* Corn Images */
+    .corn-left, .corn-right {
+      width: 100px;
+      animation: bounce 2.5s infinite ease-in-out;
+    }
+    .corn-left {
+      position: absolute;
+      top: 50px;
+      left: 40px;
+      width: 180px;   /* mas dako kaysa 100px */
+  height: auto;  
+    }
+   .corn-right {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  width: 220px;   /* mas dako kaysa 100px */
+  height: 180px;   /* para di ma-distort */
+}
+
+
+    /* Contact Section */
+    .contact {
+      margin-top: 15%;
+      margin-right: 70%;
+      font-size: 10px;
+      font-weight: bold;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 0 20px;
-      background-color: rgba(0, 0, 0, 0.4);
+      gap: 10px;
     }
 
-    .hero h1 {
-      font-size: 2.5em;
-      margin-bottom: 30px;
-      color: #fff;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
-    }
-
-    .hero .learn-btn {
-      background: linear-gradient(to right, #4CAF50, #8ed14b);
-      border: none;
-      border-radius: 30px;
-      color: white;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .hero .learn-btn:hover {
-      transform: scale(1.05);
-    }
-
-    /* Smooth slide section - SAME BACKGROUND STYLE */
-    .learn-more-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.8s ease;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 20px;
-      background: rgba(0,0,0,0.4); /* same as hero */
-      color: white;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .learn-more-content.show {
-      max-height: 500px;
-      padding: 20px;
-      margin-top: 20px;
+    .gmail-icon {
+  width: 15%;   /* sakto lang (adjust size) */
+  height: 15%;
+  vertical-align: middle; /* aligns with text */
+  margin-right: 8px; /* space between logo and text */
+}
+    /* Bounce animation (shared for icon & corn) */
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Navbar -->
   <header>
     <div class="logo">
       <img src="./images/logo.png" alt="Pest Patrol Logo" />
@@ -165,8 +172,8 @@
     <nav>
       <a href="./home.html">HOME</a>
       <a href="./about.html">ABOUT</a>
-      <a href="#">FEATURE</a>
-      <a href="#">DETECTED PEST</a>
+      <a href="./feature.html">FEATURE</a>
+      <a href="./detected.html">DETECTED PEST</a>
     </nav>
     <div class="profile-container" onclick="toggleDropdown()">
       <div class="profile-icon"></div>
@@ -177,17 +184,24 @@
     </div>
   </header>
 
-  <section class="hero">
-    <h1>"Smart. Sustainable. Automated Pest Control."</h1>
-    <button class="learn-btn">Learn More</button>
-  </section>
+  <!-- About Section -->
+  <div class="about-section">
+    <img src="./images/corn-left.jpg" alt="Corn Left" class="corn-left">
+    <h2>Pest Patrol</h2>
+    <p>
+      Pest Patrol is a multifunctional pest management system powered by IoT, solar energy, 
+      and organic solutions to provide eco-friendly and automated control of pests in crop fields.
+    </p>
 
-  <!-- Slide Down Section -->
-  <div id="learnMore" class="learn-more-content">
-    Pest Patrol is designed to protect crops with IoT-powered detection, 
-    solar energy for sustainability, and eco-friendly organic repellents. 
-    It automatically monitors fields, repels pests, and ensures higher yields 
-    while reducing the use of harmful chemicals.
+   <div class="contact">
+  <p>
+    <img src="./images/gmail.png" class="gmail-icon">
+    PestPatrol05@gmail.com
+  </p>
+</div>
+
+
+    <img src="./images/corn-right.jpg" alt="Corn Right" class="corn-right">
   </div>
 
   <script>
@@ -196,20 +210,11 @@
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Hide profile dropdown when clicking outside
+    // Hide dropdown when clicking outside
     window.addEventListener('click', function(e) {
       const container = document.querySelector('.profile-container');
       if (!container.contains(e.target)) {
         document.getElementById('profileDropdown').style.display = 'none';
-      }
-    });
-
-    // Smooth Learn More slide down
-    document.querySelector('.learn-btn').addEventListener('click', function() {
-      const content = document.getElementById('learnMore');
-      content.classList.toggle('show');
-      if(content.classList.contains('show')){
-        content.scrollIntoView({behavior: "smooth"});
       }
     });
   </script>
