@@ -50,7 +50,7 @@
     }
 
     nav a {
-      color: black;
+      color: white;
       text-decoration: none;
       transition: color 0.3s;
     }
@@ -75,7 +75,7 @@
     .dropdown {
       position: absolute;
       top: 60px;
-      right: 30px;
+      right: 0;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -134,15 +134,17 @@
       transform: scale(1.05);
     }
 
-    /* Smooth slide section - SAME BACKGROUND STYLE */
+    /* Slide section */
     .learn-more-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.8s ease;
+      transition: max-height 0.4s ease-in-out;
       max-width: 800px;
-      margin: 0 auto;
+      margin-top: 20px;
+      margin-left: 20%;
+      margin-bottom: 20%;
       padding: 0 20px;
-      background: rgba(0,0,0,0.4); /* same as hero */
+      background: rgba(0,0,0,0.4);
       color: white;
       border-radius: 10px;
       text-align: center;
@@ -150,10 +152,12 @@
       line-height: 1.6;
     }
 
+    .learn-more-content p {
+      margin: 20px 0;
+    }
+
     .learn-more-content.show {
-      max-height: 500px;
       padding: 20px;
-      margin-top: 20px;
     }
   </style>
 </head>
@@ -165,15 +169,16 @@
     <nav>
       <a href="./home.html">HOME</a>
       <a href="./about.html">ABOUT</a>
-      <a href="#">FEATURE</a>
-      <a href="#">DETECTED PEST</a>
+      <a href="./features.html">FEATURE</a>
+      <a href="./detected.html">DETECTED PEST</a>
     </nav>
     <div class="profile-container" onclick="toggleDropdown()">
-      <div class="profile-icon"></div>
-      <div class="dropdown" id="profileDropdown">
-        <a href="./profile.html">Profile</a>
-        <a href="./index.html">Logout</a>
-      </div>
+  <div class="profile-icon" id="profileImage"></div>
+  <div class="dropdown" id="profileDropdown">
+    <a href="./profile.html">Profile</a>
+    <a href="./index.html">Logout</a>
+  </div>
+</div>
     </div>
   </header>
 
@@ -184,10 +189,16 @@
 
   <!-- Slide Down Section -->
   <div id="learnMore" class="learn-more-content">
-    Pest Patrol is designed to protect crops with IoT-powered detection, 
+    <p>Pest Patrol is designed to protect crops with IoT-powered detection, 
     solar energy for sustainability, and eco-friendly organic repellents. 
     It automatically monitors fields, repels pests, and ensures higher yields 
-    while reducing the use of harmful chemicals.
+    while reducing the use of harmful chemicals.</p>
+
+    <p>Using smart sensors and data analytics, Pest Patrol identifies pest activity early, 
+    minimizing crop loss and maximizing farmer efficiency.</p>
+
+    <p>The system integrates seamlessly with solar-powered automation for 
+    year-round, self-sustaining operation in rural environments.</p>
   </div>
 
   <script>
@@ -196,7 +207,7 @@
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Hide profile dropdown when clicking outside
+    // Hide dropdown when clicking outside
     window.addEventListener('click', function(e) {
       const container = document.querySelector('.profile-container');
       if (!container.contains(e.target)) {
@@ -204,12 +215,24 @@
       }
     });
 
-    // Smooth Learn More slide down
-    document.querySelector('.learn-btn').addEventListener('click', function() {
-      const content = document.getElementById('learnMore');
+    // Smooth Learn More slide down showing all text
+    const learnBtn = document.querySelector('.learn-btn');
+    const content = document.getElementById('learnMore');
+
+    learnBtn.addEventListener('click', function() {
       content.classList.toggle('show');
-      if(content.classList.contains('show')){
-        content.scrollIntoView({behavior: "smooth"});
+      if (content.classList.contains('show')) {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        content.scrollIntoView({ behavior: "smooth" });
+      } else {
+        content.style.maxHeight = 0;
+      }
+    });
+
+    // Adjust on window resize to keep height correct
+    window.addEventListener('resize', () => {
+      if (content.classList.contains('show')) {
+        content.style.maxHeight = content.scrollHeight + 'px';
       }
     });
   </script>

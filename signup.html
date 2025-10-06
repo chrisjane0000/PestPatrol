@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pest Patrol - Signup</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0;
@@ -55,9 +56,7 @@
       width: 300px;
     }
 
-    .signup-form input[type="text"],
-    .signup-form input[type="password"],
-    .signup-form input[type="email"] {
+    .signup-form input {
       padding: 15px;
       border: none;
       border-radius: 25px;
@@ -105,10 +104,10 @@
 
   <div class="signup-container">
     <form class="signup-form" id="signupForm">
-      <input type="text" placeholder="Fullname" required />
-      <input type="text" placeholder="Enter your Email/Number" required />
-      <input type="password" placeholder="Enter your password" required />
-      <input type="password" placeholder="Confirm password" required />
+      <input id="fullname" type="text" placeholder="Fullname" required />
+      <input id="email" type="email" placeholder="Enter your Email" required />
+      <input id="password" type="password" placeholder="Enter your password" required />
+      <input id="confirm" type="password" placeholder="Confirm password" required />
 
       <button type="submit">Sign up</button>
 
@@ -119,15 +118,58 @@
   </div>
 
   <script>
-    document.getElementById('signupForm').addEventListener('submit', function (e) {
-      e.preventDefault(); // Stop form from submitting normally
+  // Initialize Supabase client
+  const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      // Optionally: send data to server via fetch()
+  document.getElementById("signupForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-      // Simulate success then redirect
-      alert('Signup successful! Redirecting to OTP verification...');
-      window.location.href = './Otp.html'; // Redirect to OTP entry page
-    });
-  </script>
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirm = document.getElementById("confirm").value.trim();
+
+    if (password !== confirm) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      // Step 1: Create user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { fullname } },
+      });
+
+      if (authError) throw authError;
+
+      const user = authData.user;
+      if (!user) throw new Error("User not returned from Supabase.");
+
+      // ✅ Step 2: Insert new user into 'users' table
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert([
+          {
+            auth_id: user.id,
+            fullname: fullname,
+            email: email,
+          },
+        ]);
+
+      if (insertError) throw insertError;
+
+      alert("Signup successful! Confirm Email...");
+      window.location.href = "./signup.html";
+    } catch (err) {
+      alert("Signup failed: " + err.message);
+    }
+  });
+</script>
+
 </body>
 </html>

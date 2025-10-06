@@ -22,12 +22,13 @@
 
     /* Navbar */
     nav {
-      background: linear-gradient(to right, #4CAF50, #8ed14b);
+      background: linear-gradient(to right, #8ed14b);
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 15px 30px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: relative;
     }
 
     nav img {
@@ -52,12 +53,46 @@
       color: #222;
     }
 
-    .profile {
+    /* Profile Dropdown */
+    .profile-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-icon {
       width: 38px;
       height: 38px;
-      background: #eee url('https://img.icons8.com/ios-filled/50/user.png') center/60% no-repeat;
       border-radius: 50%;
-      cursor: pointer;
+      background: #eee url('https://img.icons8.com/ios-filled/50/user.png') center/60% no-repeat;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      min-width: 120px;
+      z-index: 100;
+    }
+
+    .dropdown a {
+      color: black;
+      padding: 10px;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background-color: #f0f0f0;
     }
 
     /* Content Section */
@@ -120,19 +155,83 @@
       font-size: 15px;
       color: #f0f0f0;
     }
+
+    /* Pest Table Section */
+    .pest-table-container {
+      max-width: 800px;
+      margin: 60px auto;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .pest-table-container h3 {
+      text-align: center;
+      color: #2d4a1f;
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #cce0b3;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #dff0c8;
+      color: #2d4a1f;
+      font-size: 16px;
+    }
+
+    td {
+      background-color: #f6ffef;
+      color: #333;
+    }
+
+    td img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+
+    .species-name {
+      font-weight: bold;
+      color: #2d4a1f;
+    }
+
+    .species-sub {
+      font-style: italic;
+      color: #555;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <!-- Navbar -->
   <nav>
-    <img src="https://i.ibb.co/D4nG8Bb/logo.png" alt="Pest Patrol Logo">
+    <img src="./images/logo.png" alt="Pest Patrol Logo">
     <ul>
-      <li><a href="#">HOME</a></li>
-      <li><a href="#">ABOUT</a></li>
-      <li><a href="#">FEATURE</a></li>
-      <li><a href="#">DETECTED PEST</a></li>
+      <li><a href="./home.html">HOME</a></li>
+      <li><a href="./about.html">ABOUT</a></li>
+      <li><a href="./features.html">FEATURE</a></li>
+      <li><a href="./detected.html">DETECTED PEST</a></li>
     </ul>
-    <div class="profile"></div>
+    <div class="profile-container" onclick="toggleDropdown()">
+      <div class="profile-icon"></div>
+      <div class="dropdown" id="profileDropdown">
+        <a href="./profile.html">Profile</a>
+        <a href="./index.html">Logout</a>
+      </div>
+    </div>
   </nav>
 
   <!-- Main Content -->
@@ -163,5 +262,60 @@
       </div>
     </div>
   </div>
+
+  <!-- Pest Table -->
+  <div class="pest-table-container">
+    <h3>PestPatrol Available Pests</h3>
+    <table>
+      <tr>
+        <th>Pest</th>
+        <th>Species</th>
+        <th>Attack Time</th>
+        <th>Damage</th>
+      </tr>
+      <tr>
+        <td><img src="./images/fall-armyworm-1.webp" alt="Fall Armyworm"></td>
+        <td>
+          <div class="species-name">Fall Armyworm</div>
+          <div class="species-sub"><i>Spodoptera frugiperda</i></div>
+        </td>
+        <td>🌙 Nocturnal</td>
+        <td><b>High</b></td>
+      </tr>
+      <tr>
+        <td><img src="./images/cornborer.jpg" alt="Asian Corn Borer"></td>
+        <td>
+          <div class="species-name">Asian Corn Borer</div>
+          <div class="species-sub"><i>Ostrinia furnacalis</i></div>
+        </td>
+        <td>🌙 Nocturnal</td>
+        <td><b>High</b></td>
+      </tr>
+      <tr>
+        <td><img src="./images/rodent.jpg" alt="Rodent"></td>
+        <td>
+          <div class="species-name">Rodent</div>
+          <div class="species-sub"><i>Mammalia</i></div>
+        </td>
+        <td>☀️ Both</td>
+        <td><b>Medium</b></td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Hide dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      const container = document.querySelector('.profile-container');
+      if (!container.contains(e.target)) {
+        document.getElementById('profileDropdown').style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detected Pests - Pest Patrol</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #a4db73, #58a23f);
+      background-attachment: fixed;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      background: #8ed14b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    nav img {
+      width: 60px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #000;
+      font-weight: 600;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #fff;
+    }
+
+    .profile-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #eee url('https://img.icons8.com/ios-filled/50/user.png') center center no-repeat;
+      background-size: 60%;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      min-width: 120px;
+      z-index: 100;
+    }
+
+    .dropdown a {
+      color: black;
+      padding: 10px;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Container */
+    .container {
+      background: #ffffffc7;
+      border-radius: 12px;
+      margin-top: 40px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #d3e8c3;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+    }
+
+    .header h3 {
+      color: #2b4b24;
+      font-size: 18px;
+    }
+
+    .header h2 {
+      color: #244d1d;
+      font-size: 20px;
+    }
+
+    /* Pest list */
+    .pest-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pest-item {
+      display: flex;
+      align-items: center;
+      background: #f0f9ec;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .pest-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .pest-item img {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      margin-right: 15px;
+      object-fit: cover;
+    }
+
+    .pest-info {
+      flex: 1;
+    }
+
+    .pest-info h4 {
+      color: #2b4b24;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .pest-info p {
+      color: #333;
+      font-size: 14px;
+      margin-top: 3px;
+    }
+
+    .pest-details {
+      text-align: right;
+      font-size: 13px;
+      color: #333;
+    }
+
+    /* Pest Data Logs Section */
+    .data-logs {
+      background: #eafbe1;
+      border-radius: 12px;
+      margin-top: 40px;
+      margin-bottom: 10%;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .data-logs h2 {
+      color: #244d1d;
+      margin-bottom: 15px;
+    }
+
+    .search-box {
+      margin-bottom: 15px;
+    }
+
+    .search-box input {
+      width: 80%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: #58a23f;
+      box-shadow: 0 0 6px rgba(88,162,63,0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    th {
+      background: #2f6e2c;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #333;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background-color: #f0f9ec;
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        gap: 15px;
+      }
+      .container, .data-logs {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <img src="./images/logo.png" alt="Pest Patrol Logo" />
+    <ul>
+      <li><a href="./home.html">HOME</a></li>
+      <li><a href="./about.html">ABOUT</a></li>
+      <li><a href="./features.html">FEATURE</a></li>
+      <li><a href="./detected.html"><b>DETECTED PEST</b></a></li>
+    </ul>
+    <div class="profile-container" onclick="toggleDropdown()">
+      <div class="profile-icon"></div>
+      <div class="dropdown" id="profileDropdown">
+        <a href="./profile.html">Profile</a>
+        <a href="./index.html">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="container">
+    <div class="header">
+      <h3>Pest Patrol</h3>
+      <h2>Detected Pests</h2>
+    </div>
+
+    <div class="pest-list">
+      <div class="pest-item">
+        <img src="./images/corn-borer.jpg" alt="Corn Borer" />
+        <div class="pest-info">
+          <h4>Corn Borer</h4>
+          <p>Detected: 10:24 AM</p>
+          <p>Location: Zone A</p>
+        </div>
+        <div class="pest-details">
+          <p>Date: 2025-10-06</p>
+          <p>Confidence: 94%</p>
+        </div>
+      </div>
+
+      <div class="pest-item">
+        <img src="./images/aphid.jpg" alt="Aphid" />
+        <div class="pest-info">
+          <h4>Aphid</h4>
+          <p>Detected: 10:26 AM</p>
+          <p>Location: Zone C</p>
+        </div>
+        <div class="pest-details">
+          <p>Date: 2025-10-05</p>
+          <p>Confidence: 92%</p>
+        </div>
+      </div>
+
+      <div class="pest-item">
+        <img src="./images/beetle.jpg" alt="Beetle" />
+        <div class="pest-info">
+          <h4>Beetle</h4>
+          <p>Detected: 10:35 AM</p>
+          <p>Location: Zone A</p>
+        </div>
+        <div class="pest-details">
+          <p>Date: 2025-10-04</p>
+          <p>Confidence: 88%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pest Data Logs Section -->
+  <div class="data-logs">
+    <h2>Pest Data Logs</h2>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search by Pest, Date, or Time..." />
+    </div>
+
+    <table id="pestTable">
+      <thead>
+        <tr>
+          <th>Pest</th>
+          <th>Date Detected</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Rat</td><td>2025-05-29</td><td>07:45 AM</td></tr>
+        <tr><td>Asian Corn Borer</td><td>2025-05-28</td><td>10:30 AM</td></tr>
+        <tr><td>Fall Armyworm</td><td>2025-05-27</td><td>01:20 PM</td></tr>
+        <tr><td>Beetle</td><td>2025-10-04</td><td>10:35 AM</td></tr>
+        <tr><td>Aphid</td><td>2025-10-05</td><td>10:26 AM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Scripts -->
+  <script>
+    // Search Filter
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('#pestTable tbody tr');
+    searchInput.addEventListener('keyup', function() {
+      const filter = searchInput.value.toLowerCase();
+      tableRows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+
+    // Dropdown Toggle
+    function toggleDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Hide dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      const container = document.querySelector('.profile-container');
+      if (!container.contains(e.target)) {
+        document.getElementById('profileDropdown').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
