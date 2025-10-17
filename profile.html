@@ -177,6 +177,11 @@
   const profileImage = document.getElementById("profileImage");
   const fileInput = document.getElementById("fileInput");
 
+  const aboutInput = document.getElementById('aboutInput');
+  const aboutDisplay = document.getElementById('aboutDisplay');
+  const saveBtn = document.getElementById('saveBtn');
+  const backBtn = document.getElementById('backBtn');
+
   let authId = null;
 
   // ✅ Load current user
@@ -209,8 +214,6 @@
     }
   }
 
-  loadUser();
-
   // 📁 Trigger upload input
   document.getElementById("profileImageContainer").addEventListener("click", () => {
     fileInput.click();
@@ -225,7 +228,6 @@
     const fileName = `${authId}-${Date.now()}.${fileExt}`;
     const filePath = `profiles/${fileName}`;
 
-    // Upload to avatars bucket
     const { data: uploadData, error: uploadError } = await supabaseClient
       .storage
       .from("avatars")
@@ -237,7 +239,6 @@
       return;
     }
 
-    // ✅ Get public URL
     const { data: publicData, error: publicUrlError } = supabaseClient
       .storage
       .from("avatars")
@@ -251,7 +252,6 @@
 
     const imageUrl = publicData?.publicUrl;
 
-    // ✅ Update users table
     const { error: dbError } = await supabaseClient
       .from("users")
       .update({ image_url: imageUrl })
@@ -268,42 +268,94 @@
   });
 
   // ✅ About section
-  const aboutInput = document.getElementById('aboutInput');
-  const aboutDisplay = document.getElementById('aboutDisplay');
-  const saveBtn = document.getElementById('saveBtn');
-  const backBtn = document.getElementById('backBtn');
+  async function loadAbout() {
+    if (!authId) return;
 
-  const savedAbout = localStorage.getItem('aboutText');
-  if (savedAbout) {
-    aboutDisplay.textContent = savedAbout;
-    aboutInput.style.display = 'none';
-    aboutDisplay.style.display = 'block';
-    saveBtn.textContent = 'Edit';
-  }
+    const { data, error } = await supabaseClient
+      .from("users")
+      .select("about")
+      .eq("auth_id", authId)
+      .single();
 
-  saveBtn.addEventListener('click', () => {
-    if (saveBtn.textContent === 'Save') {
-      const aboutText = aboutInput.value.trim();
-      if (aboutText) {
-        aboutDisplay.textContent = aboutText;
-        aboutDisplay.style.display = 'block';
-        aboutInput.style.display = 'none';
-        saveBtn.textContent = 'Edit';
-        localStorage.setItem('aboutText', aboutText);
-      } else {
-        alert('Please enter something about yourself.');
-      }
+    if (error) {
+      console.error("Error loading about text:", error);
+      return;
+    }
+
+    if (data?.about) {
+      aboutDisplay.textContent = data.about;
+      aboutInput.style.display = 'none';
+      aboutDisplay.style.display = 'block';
+      saveBtn.textContent = 'Edit';
     } else {
-      aboutInput.style.display = 'block';
       aboutDisplay.style.display = 'none';
-      aboutInput.value = aboutDisplay.textContent;
+      aboutInput.style.display = 'block';
       saveBtn.textContent = 'Save';
     }
-  });
+  }
+
+  saveBtn.addEventListener('click', async () => {
+  if (saveBtn.textContent === 'Save') {
+    const aboutText = aboutInput.value.trim();
+    if (!aboutText) {
+      alert('Please enter something about yourself.');
+      return;
+    }
+
+    // ✅ Ensure user exists before updating
+    const { data: existingUser, error: checkError } = await supabaseClient
+      .from("users")
+      .select("auth_id")
+      .eq("auth_id", authId)
+      .maybeSingle();
+
+    if (checkError) {
+      console.error("Check user error:", checkError);
+      alert("Database error while checking user.");
+      return;
+    }
+
+    if (!existingUser) {
+      const { error: insertError } = await supabaseClient
+        .from("users")
+        .insert([{ auth_id: authId }]);
+      if (insertError) {
+        console.error("Insert error:", insertError);
+        alert("Could not create user record.");
+        return;
+      }
+    }
+
+    // ✅ Update About Me
+    const { error } = await supabaseClient
+      .from("users")
+      .update({ about: aboutText })
+      .eq("auth_id", authId);
+
+    if (error) {
+      console.error("Error saving about text:", error);
+      alert("Failed to save About Me.");
+      return;
+    }
+
+    aboutDisplay.textContent = aboutText;
+    aboutDisplay.style.display = 'block';
+    aboutInput.style.display = 'none';
+    saveBtn.textContent = 'Edit';
+  } else {
+    aboutInput.style.display = 'block';
+    aboutDisplay.style.display = 'none';
+    aboutInput.value = aboutDisplay.textContent;
+    saveBtn.textContent = 'Save';
+  }
+});
 
   backBtn.addEventListener('click', () => {
     window.history.back();
   });
+
+  // 🔥 Proper sequence: load user THEN load about
+  loadUser().then(loadAbout);
 </script>
 
 </body>

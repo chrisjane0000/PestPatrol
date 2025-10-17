@@ -267,7 +267,7 @@
       <li><a href="./detected.html"><b>DETECTED PEST</b></a></li>
     </ul>
     <div class="profile-container" onclick="toggleDropdown()">
-      <div class="profile-icon"></div>
+      <div class="profile-icon" id="profileImage"></div>
       <div class="dropdown" id="profileDropdown">
         <a href="./profile.html">Profile</a>
         <a href="./index.html">Logout</a>
@@ -350,7 +350,12 @@
   </div>
 
   <!-- ✅ Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     // Search Filter
     const searchInput = document.getElementById('searchInput');
     const tableRows = document.querySelectorAll('#pestTable tbody tr');
@@ -375,6 +380,40 @@
         document.getElementById('profileDropdown').style.display = 'none';
       }
     });
+
+    // ✅ Load profile image from Supabase
+    async function loadProfileImage() {
+      try {
+        const { data: { user }, error: userErr } = await supabaseClient.auth.getUser();
+        if (userErr || !user) return;
+
+        const { data, error: fetchError } = await supabaseClient
+          .from("users")
+          .select("image_url")
+          .eq("auth_id", user.id)
+          .single();
+
+        if (fetchError) {
+          console.error("Error loading profile image:", fetchError);
+          return;
+        }
+
+        const profileDiv = document.getElementById("profileImage");
+        if (!profileDiv) return;
+
+        if (data?.image_url) {
+          profileDiv.style.backgroundImage = `url('${data.image_url}')`;
+          profileDiv.style.backgroundSize = "cover";
+          profileDiv.style.backgroundPosition = "center";
+          profileDiv.style.backgroundRepeat = "no-repeat";
+        }
+      } catch (err) {
+        console.error("Unexpected error loading profile image:", err);
+      }
+    }
+
+    // Run on page load
+    loadProfileImage();
   </script>
 </body>
 </html>

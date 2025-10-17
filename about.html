@@ -118,21 +118,22 @@
       width: 100px;
       animation: bounce 2.5s infinite ease-in-out;
     }
+
     .corn-left {
       position: absolute;
       top: 50px;
       left: 40px;
-      width: 180px;   /* mas dako kaysa 100px */
-  height: auto;  
+      width: 180px;
+      height: auto;  
     }
-   .corn-right {
-  position: absolute;
-  bottom: 20px;
-  right: 30px;
-  width: 220px;   /* mas dako kaysa 100px */
-  height: 180px;   /* para di ma-distort */
-}
 
+    .corn-right {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      width: 220px;
+      height: 180px;
+    }
 
     /* Contact Section */
     .contact {
@@ -147,12 +148,13 @@
     }
 
     .gmail-icon {
-  width: 15%;   /* sakto lang (adjust size) */
-  height: 15%;
-  vertical-align: middle; /* aligns with text */
-  margin-right: 8px; /* space between logo and text */
-}
-    /* Bounce animation (shared for icon & corn) */
+      width: 15%;
+      height: 15%;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    /* Bounce animation */
     @keyframes bounce {
       0%, 100% {
         transform: translateY(0);
@@ -176,7 +178,7 @@
       <a href="./detected.html">DETECTED PEST</a>
     </nav>
     <div class="profile-container" onclick="toggleDropdown()">
-      <div class="profile-icon"></div>
+      <div class="profile-icon" id="profileImage"></div>
       <div class="dropdown" id="profileDropdown">
         <a href="./profile.html">Profile</a>
         <a href="./index.html">Logout</a>
@@ -193,13 +195,12 @@
       and organic solutions to provide eco-friendly and automated control of pests in crop fields.
     </p>
 
-   <div class="contact">
-  <p>
-    <img src="./images/gmail.png" class="gmail-icon">
-    PestPatrol05@gmail.com
-  </p>
-</div>
-
+    <div class="contact">
+      <p>
+        <img src="./images/gmail.png" class="gmail-icon">
+        PestPatrol05@gmail.com
+      </p>
+    </div>
 
     <img src="./images/corn-right.jpg" alt="Corn Right" class="corn-right">
   </div>
@@ -210,13 +211,52 @@
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Hide dropdown when clicking outside
     window.addEventListener('click', function(e) {
       const container = document.querySelector('.profile-container');
       if (!container.contains(e.target)) {
         document.getElementById('profileDropdown').style.display = 'none';
       }
     });
+  </script>
+
+  <!-- ✅ Added Supabase Profile Image Integration -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadProfileImage() {
+      try {
+        const { data: { user }, error: userErr } = await supabaseClient.auth.getUser();
+        if (userErr || !user) return;
+
+        const { data, error: fetchError } = await supabaseClient
+          .from("users")
+          .select("image_url")
+          .eq("auth_id", user.id)
+          .single();
+
+        if (fetchError) {
+          console.error("Error loading profile image:", fetchError);
+          return;
+        }
+
+        const profileDiv = document.getElementById("profileImage");
+        if (!profileDiv) return;
+
+        if (data?.image_url) {
+          profileDiv.style.backgroundImage = `url('${data.image_url}')`;
+          profileDiv.style.backgroundSize = "cover";
+          profileDiv.style.backgroundPosition = "center";
+          profileDiv.style.backgroundRepeat = "no-repeat";
+        }
+      } catch (err) {
+        console.error("Unexpected error loading profile image:", err);
+      }
+    }
+
+    loadProfileImage();
   </script>
 </body>
 </html>

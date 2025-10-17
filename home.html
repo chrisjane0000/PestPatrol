@@ -134,7 +134,7 @@
       transform: scale(1.05);
     }
 
-    /* Slide section */
+    /* Learn More section */
     .learn-more-content {
       max-height: 0;
       overflow: hidden;
@@ -166,75 +166,107 @@
     <div class="logo">
       <img src="./images/logo.png" alt="Pest Patrol Logo" />
     </div>
+
     <nav>
       <a href="./home.html">HOME</a>
       <a href="./about.html">ABOUT</a>
       <a href="./features.html">FEATURE</a>
       <a href="./detected.html">DETECTED PEST</a>
     </nav>
+
     <div class="profile-container" onclick="toggleDropdown()">
-  <div class="profile-icon" id="profileImage"></div>
-  <div class="dropdown" id="profileDropdown">
-    <a href="./profile.html">Profile</a>
-    <a href="./index.html">Logout</a>
-  </div>
-</div>
+      <div class="profile-icon" id="profileImage"></div>
+      <div class="dropdown" id="profileDropdown">
+        <a href="./profile.html">Profile</a>
+        <a href="./index.html">Logout</a>
+      </div>
     </div>
   </header>
 
   <section class="hero">
     <h1>"Smart. Sustainable. Automated Pest Control."</h1>
-    <button class="learn-btn">Learn More</button>
+    <button class="learn-btn" onclick="toggleLearnMore()">Learn More</button>
   </section>
 
-  <!-- Slide Down Section -->
   <div id="learnMore" class="learn-more-content">
-    <p>Pest Patrol is designed to protect crops with IoT-powered detection, 
-    solar energy for sustainability, and eco-friendly organic repellents. 
-    It automatically monitors fields, repels pests, and ensures higher yields 
-    while reducing the use of harmful chemicals.</p>
+    <p>Pest Patrol is designed to protect crops with IoT-powered detection,
+      solar energy for sustainability, and eco-friendly organic repellents.
+      It automatically monitors fields, repels pests, and ensures higher yields
+      while reducing the use of harmful chemicals.</p>
 
-    <p>Using smart sensors and data analytics, Pest Patrol identifies pest activity early, 
-    minimizing crop loss and maximizing farmer efficiency.</p>
+    <p>Using smart sensors and data analytics, Pest Patrol identifies pest activity early,
+      minimizing crop loss and maximizing farmer efficiency.</p>
 
-    <p>The system integrates seamlessly with solar-powered automation for 
-    year-round, self-sustaining operation in rural environments.</p>
+    <p>The system integrates seamlessly with solar-powered automation for
+      year-round, self-sustaining operation in rural environments.</p>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Dropdown toggle
     function toggleDropdown() {
       const dropdown = document.getElementById('profileDropdown');
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
 
     // Hide dropdown when clicking outside
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', (e) => {
       const container = document.querySelector('.profile-container');
+      const dropdown = document.getElementById('profileDropdown');
       if (!container.contains(e.target)) {
-        document.getElementById('profileDropdown').style.display = 'none';
+        dropdown.style.display = 'none';
       }
     });
 
-    // Smooth Learn More slide down showing all text
-    const learnBtn = document.querySelector('.learn-btn');
-    const content = document.getElementById('learnMore');
-
-    learnBtn.addEventListener('click', function() {
-      content.classList.toggle('show');
-      if (content.classList.contains('show')) {
-        content.style.maxHeight = content.scrollHeight + 'px';
-        content.scrollIntoView({ behavior: "smooth" });
+    // Learn More section toggle
+    function toggleLearnMore() {
+      const learnMore = document.getElementById('learnMore');
+      if (learnMore.classList.contains('show')) {
+        learnMore.classList.remove('show');
+        learnMore.style.maxHeight = "0";
       } else {
-        content.style.maxHeight = 0;
+        learnMore.classList.add('show');
+        learnMore.style.maxHeight = learnMore.scrollHeight + "px";
       }
-    });
+    }
 
-    // Adjust on window resize to keep height correct
-    window.addEventListener('resize', () => {
-      if (content.classList.contains('show')) {
-        content.style.maxHeight = content.scrollHeight + 'px';
+    // Load profile image from Supabase
+    async function loadProfileImage() {
+      try {
+        const { data: { user }, error: userErr } = await supabaseClient.auth.getUser();
+        if (userErr || !user) return;
+
+        const { data, error: fetchError } = await supabaseClient
+          .from("users")
+          .select("image_url")
+          .eq("auth_id", user.id)
+          .single();
+
+        if (fetchError) {
+          console.error("Error loading profile image:", fetchError);
+          return;
+        }
+
+        const profileDiv = document.getElementById("profileImage");
+        if (!profileDiv) return;
+
+        if (data?.image_url) {
+          profileDiv.style.backgroundImage = `url('${data.image_url}')`;
+          profileDiv.style.backgroundSize = "cover";
+          profileDiv.style.backgroundPosition = "center";
+          profileDiv.style.backgroundRepeat = "no-repeat";
+        }
+      } catch (err) {
+        console.error("Unexpected error loading profile image:", err);
       }
-    });
+    }
+
+    // Run when page loads
+    loadProfileImage();
   </script>
 </body>
 </html>
