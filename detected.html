@@ -4,15 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Detected Pests - Pest Patrol</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body {
       background: linear-gradient(to bottom right, #a4db73, #58a23f);
       background-attachment: fixed;
@@ -21,8 +15,6 @@
       flex-direction: column;
       align-items: center;
     }
-
-    /* Navbar */
     nav {
       width: 100%;
       background: #8ed14b;
@@ -31,19 +23,13 @@
       align-items: center;
       padding: 15px 40px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      position: relative;
     }
-
-    nav img {
-      width: 60px;
-    }
-
+    nav img { width: 60px; }
     nav ul {
       list-style: none;
       display: flex;
       gap: 30px;
     }
-
     nav ul li a {
       text-decoration: none;
       color: #000;
@@ -51,28 +37,17 @@
       font-size: 18px;
       transition: color 0.3s;
     }
+    nav ul li a:hover { color: #fff; }
 
-    nav ul li a:hover {
-      color: #fff;
-    }
-
-    .profile-container {
-      position: relative;
-      cursor: pointer;
-    }
-
+    .profile-container { position: relative; cursor: pointer; }
     .profile-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 40px; height: 40px; border-radius: 50%;
       background: #eee url('https://img.icons8.com/ios-filled/50/user.png') center center no-repeat;
       background-size: 60%;
     }
-
     .dropdown {
       position: absolute;
-      top: 60px;
-      right: 0;
+      top: 60px; right: 0;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -81,7 +56,6 @@
       min-width: 120px;
       z-index: 100;
     }
-
     .dropdown a {
       color: black;
       padding: 10px;
@@ -89,97 +63,35 @@
       border-bottom: 1px solid #eee;
       transition: background 0.3s;
     }
+    .dropdown a:last-child { border-bottom: none; }
+    .dropdown a:hover { background-color: #f0f0f0; }
 
-    .dropdown a:last-child {
-      border-bottom: none;
-    }
-
-    .dropdown a:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* Container */
     .container {
       background: #ffffffc7;
       border-radius: 12px;
       margin-top: 40px;
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       padding: 20px;
+      text-align: center;
     }
-
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid #d3e8c3;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
+    }
+    .header h3 { color: #2b4b24; font-size: 18px; }
+    .header h2 { color: #244d1d; font-size: 20px; }
+
+    .chart-container {
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
     }
 
-    .header h3 {
-      color: #2b4b24;
-      font-size: 18px;
-    }
-
-    .header h2 {
-      color: #244d1d;
-      font-size: 20px;
-    }
-
-    /* Pest list */
-    .pest-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .pest-item {
-      display: flex;
-      align-items: center;
-      background: #f0f9ec;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-
-    .pest-item:hover {
-      transform: translateY(-4px);
-    }
-
-    .pest-item img {
-      width: 70px;
-      height: 70px;
-      border-radius: 10px;
-      margin-right: 15px;
-      object-fit: cover;
-    }
-
-    .pest-info {
-      flex: 1;
-    }
-
-    .pest-info h4 {
-      color: #2b4b24;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .pest-info p {
-      color: #333;
-      font-size: 14px;
-      margin-top: 3px;
-    }
-
-    .pest-details {
-      text-align: right;
-      font-size: 13px;
-      color: #333;
-    }
-
-    /* Pest Data Logs Section */
     .data-logs {
       background: #eafbe1;
       border-radius: 12px;
@@ -197,9 +109,7 @@
       margin-bottom: 15px;
     }
 
-    .search-box {
-      margin-bottom: 15px;
-    }
+    .search-box { margin-bottom: 15px; }
 
     .search-box input {
       width: 80%;
@@ -210,7 +120,6 @@
       font-size: 16px;
       transition: 0.3s;
     }
-
     .search-box input:focus {
       border-color: #58a23f;
       box-shadow: 0 0 6px rgba(88,162,63,0.4);
@@ -224,40 +133,75 @@
       overflow: hidden;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
-
     th {
       background: #2f6e2c;
       color: white;
       padding: 10px;
       text-align: left;
     }
-
     td {
       padding: 10px;
       border-bottom: 1px solid #e0e0e0;
       color: #333;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background-color: #f0f9ec; }
+
+    img.pest-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    tr:last-child td {
-      border-bottom: none;
+    /* ✅ Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
     }
-
-    tr:hover {
-      background-color: #f0f9ec;
+    .modal-content {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: pop 0.3s ease-out;
+    }
+    @keyframes pop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-content img {
+      width: 200px; height: 200px; border-radius: 10px; object-fit: cover; margin-bottom: 10px;
+    }
+    .close-btn {
+      background: #2f6e2c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 15px;
     }
 
     @media (max-width: 600px) {
-      nav ul {
-        gap: 15px;
-      }
-      .container, .data-logs {
-        width: 95%;
-      }
+      nav ul { gap: 15px; }
+      .container, .data-logs { width: 95%; }
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
   <nav>
     <img src="./images/logo.png" alt="Pest Patrol Logo" />
     <ul>
@@ -275,145 +219,191 @@
     </div>
   </nav>
 
-  <!-- Content -->
   <div class="container">
     <div class="header">
       <h3>Pest Patrol</h3>
       <h2>Detected Pests</h2>
     </div>
-
-    <div class="pest-list">
-      <div class="pest-item">
-        <img src="./images/corn-borer.jpg" alt="Corn Borer" />
-        <div class="pest-info">
-          <h4>Corn Borer</h4>
-          <p>Detected: 10:24 AM</p>
-          <p>Location: Zone A</p>
-        </div>
-        <div class="pest-details">
-          <p>Date: 2025-10-06</p>
-          <p>Confidence: 94%</p>
-        </div>
-      </div>
-
-      <div class="pest-item">
-        <img src="./images/aphid.jpg" alt="Aphid" />
-        <div class="pest-info">
-          <h4>Aphid</h4>
-          <p>Detected: 10:26 AM</p>
-          <p>Location: Zone C</p>
-        </div>
-        <div class="pest-details">
-          <p>Date: 2025-10-05</p>
-          <p>Confidence: 92%</p>
-        </div>
-      </div>
-
-      <div class="pest-item">
-        <img src="./images/beetle.jpg" alt="Beetle" />
-        <div class="pest-info">
-          <h4>Beetle</h4>
-          <p>Detected: 10:35 AM</p>
-          <p>Location: Zone A</p>
-        </div>
-        <div class="pest-details">
-          <p>Date: 2025-10-04</p>
-          <p>Confidence: 88%</p>
-        </div>
-      </div>
+    <p style="color:#2b4b24; margin-top:8px;">Pest detection summary for today.</p>
+    <div class="chart-container">
+      <canvas id="pestChart"></canvas>
     </div>
   </div>
 
-  <!-- Pest Data Logs Section -->
   <div class="data-logs">
     <h2>Pest Data Logs</h2>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search by Pest, Date, or Time..." />
+      <input type="text" id="searchInput" placeholder="Search by Pest, Confidence, Date, or Time..." />
     </div>
 
     <table id="pestTable">
       <thead>
         <tr>
+          <th>Image</th>
           <th>Pest</th>
+          <th>Confidence</th>
           <th>Date Detected</th>
           <th>Time</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td>Rat</td><td>2025-05-29</td><td>07:45 AM</td></tr>
-        <tr><td>Asian Corn Borer</td><td>2025-05-28</td><td>10:30 AM</td></tr>
-        <tr><td>Fall Armyworm</td><td>2025-05-27</td><td>01:20 PM</td></tr>
-        <tr><td>Beetle</td><td>2025-10-04</td><td>10:35 AM</td></tr>
-        <tr><td>Aphid</td><td>2025-10-05</td><td>10:26 AM</td></tr>
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
-  <!-- ✅ Scripts -->
+  <!-- ✅ Modal -->
+  <div class="modal" id="pestModal">
+    <div class="modal-content">
+      <img id="modalImg" src="" alt="Pest Image">
+      <h3 id="modalPestName"></h3>
+      <p id="modalConfidence"></p>
+      <p id="modalDate"></p>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+  const SUPABASE_URL = "https://ahjlcrpzrxgvkjtcwaua.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoamxjcnB6cnhndmtqdGN3YXVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MTUwMTcsImV4cCI6MjA3NTI5MTAxN30.tpt7EU7l-Fd5I1IQqfv9e0_2hKaQKOnbasDMjf9hrh8";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Search Filter
-    const searchInput = document.getElementById('searchInput');
-    const tableRows = document.querySelectorAll('#pestTable tbody tr');
-    searchInput.addEventListener('keyup', function() {
-      const filter = searchInput.value.toLowerCase();
-      tableRows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(filter) ? '' : 'none';
+  // Dropdown toggle
+  function toggleDropdown() {
+    const dropdown = document.getElementById('profileDropdown');
+    dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  // Hide dropdown when clicking outside
+  window.addEventListener('click', e => {
+    const container = document.querySelector('.profile-container');
+    if (!container.contains(e.target)) {
+      document.getElementById('profileDropdown').style.display = 'none';
+    }
+  });
+
+  function closeModal() {
+    document.getElementById('pestModal').style.display = 'none';
+  }
+
+  // ✅ Load pest detections table + modal
+  async function loadDetections() {
+    const { data, error } = await supabaseClient
+      .from('detections')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const tableBody = document.querySelector("#pestTable tbody");
+    tableBody.innerHTML = "";
+
+    if (error || !data || data.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5">No data found.</td></tr>`;
+      return;
+    }
+
+    data.forEach(item => {
+      const date = new Date(item.created_at);
+      const formattedDate = date.toLocaleDateString();
+      const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const confidence = item.confidence ? (item.confidence * 100).toFixed(1) + "%" : "N/A";
+
+      const imagePublicURL = item.image_url
+        ? `https://ahjlcrpzrxgvkjtcwaua.supabase.co/storage/v1/object/public/${item.image_url}`
+        : null;
+
+      const imgHTML = imagePublicURL
+        ? `<img src="${imagePublicURL}" alt="${item.pest_name}" class="pest-img">`
+        : `<span style="color:gray;">No image</span>`;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${imgHTML}</td>
+        <td>${item.pest_name}</td>
+        <td>${confidence}</td>
+        <td>${formattedDate}</td>
+        <td>${formattedTime}</td>
+      `;
+
+      // ✅ Show modal when clicked
+      row.addEventListener('click', () => {
+        document.getElementById('modalImg').src = imagePublicURL || '';
+        document.getElementById('modalPestName').innerText = "Pest: " + item.pest_name;
+        document.getElementById('modalConfidence').innerText = "Confidence: " + confidence;
+        document.getElementById('modalDate').innerText = `Detected on ${formattedDate} at ${formattedTime}`;
+        document.getElementById('pestModal').style.display = 'flex';
       });
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // ✅ Load chart (pest count for today)
+  async function loadPestChart() {
+    const today = new Date().toISOString().split("T")[0];
+    const { data } = await supabaseClient.from("detections").select("pest_name, created_at");
+    if (!data) return;
+
+    const todayData = data.filter(d => d.created_at.startsWith(today));
+    const counts = {};
+    todayData.forEach(d => {
+      counts[d.pest_name] = (counts[d.pest_name] || 0) + 1;
     });
 
-    // Dropdown Toggle
-    function toggleDropdown() {
-      const dropdown = document.getElementById('profileDropdown');
-      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    // Hide dropdown when clicking outside
-    window.addEventListener('click', function(e) {
-      const container = document.querySelector('.profile-container');
-      if (!container.contains(e.target)) {
-        document.getElementById('profileDropdown').style.display = 'none';
+    const ctx = document.getElementById('pestChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(counts),
+        datasets: [{
+          label: 'Detections (Today)',
+          data: Object.values(counts),
+          backgroundColor: '#4caf50'
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
       }
     });
+  }
 
-    // ✅ Load profile image from Supabase
-    async function loadProfileImage() {
-      try {
-        const { data: { user }, error: userErr } = await supabaseClient.auth.getUser();
-        if (userErr || !user) return;
+  // ✅ Load profile image from Supabase (same as home.html)
+  async function loadProfileImage() {
+    try {
+      const { data: { user }, error: userErr } = await supabaseClient.auth.getUser();
+      if (userErr || !user) return;
 
-        const { data, error: fetchError } = await supabaseClient
-          .from("users")
-          .select("image_url")
-          .eq("auth_id", user.id)
-          .single();
+      const { data, error: fetchError } = await supabaseClient
+        .from("users")
+        .select("image_url")
+        .eq("auth_id", user.id)
+        .single();
 
-        if (fetchError) {
-          console.error("Error loading profile image:", fetchError);
-          return;
-        }
-
-        const profileDiv = document.getElementById("profileImage");
-        if (!profileDiv) return;
-
-        if (data?.image_url) {
-          profileDiv.style.backgroundImage = `url('${data.image_url}')`;
-          profileDiv.style.backgroundSize = "cover";
-          profileDiv.style.backgroundPosition = "center";
-          profileDiv.style.backgroundRepeat = "no-repeat";
-        }
-      } catch (err) {
-        console.error("Unexpected error loading profile image:", err);
+      if (fetchError) {
+        console.error("Error loading profile image:", fetchError);
+        return;
       }
-    }
 
-    // Run on page load
-    loadProfileImage();
-  </script>
+      const profileDiv = document.getElementById("profileImage");
+      if (!profileDiv) return;
+
+      if (data?.image_url) {
+        profileDiv.style.backgroundImage = `url('${data.image_url}')`;
+        profileDiv.style.backgroundSize = "cover";
+        profileDiv.style.backgroundPosition = "center";
+        profileDiv.style.backgroundRepeat = "no-repeat";
+      }
+    } catch (err) {
+      console.error("Unexpected error loading profile image:", err);
+    }
+  }
+
+  // ✅ Run on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    loadDetections();
+    loadPestChart();
+    loadProfileImage(); // 👈 this line is the key
+  });
+</script>
+
 </body>
 </html>
